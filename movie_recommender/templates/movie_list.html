@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}电影库 - 电影推荐系统{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>电影库</h2>
+        <p class="text-muted">浏览所有电影，为您喜欢的电影评分</p>
+        
+        <div class="search-form">
+            <form action="{% url 'search_movies' %}" method="get" class="form-inline">
+                <div class="form-group">
+                    <input type="text" name="q" class="form-control" placeholder="搜索电影名称..." 
+                           value="{{ request.GET.q }}" style="width: 300px;">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-search"></i> 搜索
+                </button>
+                <a href="{% url 'movie_list' %}" class="btn btn-default">显示全部</a>
+            </form>
+        </div>
+        
+        <input type="hidden" id="user-id" value="{{ user_id }}">
+        
+        <div id="movies-container">
+            <div class="row">
+                {% for movie in movies %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="movie-card">
+                        <!-- 修改的电影海报部分 -->
+                        <div class="movie-poster {% if 'Comedy' in movie.genres %}comedy{% elif 'Action' in movie.genres %}action{% elif 'Drama' in movie.genres %}drama{% elif 'Romance' in movie.genres %}romance{% elif 'Horror' in movie.genres %}horror{% elif 'Children' in movie.genres or 'Animation' in movie.genres %}children{% elif 'Sci-Fi' in movie.genres %}scifi{% elif 'Documentary' in movie.genres %}documentary{% else %}default{% endif %}">
+                            <i class="fa fa-film"></i>
+                        </div>
+                        <div class="movie-info">
+                            <div class="movie-title">{{ movie.title }}</div>
+                            <div class="movie-genres">
+                                {% if movie.genres %}
+                                    {% for genre in movie.genres.split|slice:":3" %}
+                                        <span class="genre-tag">{{ genre }}</span>
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="genre-tag">未知类型</span>
+                                {% endif %}
+                            </div>
+                            <div id="rating-{{ movie.movie_id }}" class="text-muted small" style="margin-bottom: 8px;">
+                                <!-- 评分显示区域 -->
+                            </div>
+                            <div class="rating-section">
+                                <div class="rating-controls">
+                                    <small class="rating-label">评分:</small>
+                                    {% for star in "12345" %}
+                                    <button class="btn btn-rating" 
+                                            data-rating="{{ forloop.counter }}" data-movie-id="{{ movie.movie_id }}">
+                                        {{ forloop.counter }} <i class="fa fa-star"></i>
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">暂无电影数据</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

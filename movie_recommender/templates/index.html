@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}首页 - 电影推荐系统{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); color: #2c3e50; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+    <div class="container">
+        <h1 style="color: #2c3e50;">欢迎来到电影推荐系统</h1>
+        <p style="color: #5a6c7d; font-size: 18px;">基于协同过滤算法的智能电影推荐，为您发现喜欢的电影！</p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="user-id-form" style="background: rgba(255, 255, 255, 0.9); color: #2c3e50;">
+                    <h3 style="color: #2c3e50;">开始使用</h3>
+                    <div class="form-group">
+                        <label for="user-id-input" style="color: #2c3e50;">请输入用户ID:</label>
+                        <input type="number" class="form-control" id="user-id-input" placeholder="例如: 1" min="1" style="color: #2c3e50;">
+                    </div>
+                    <button id="set-user-id" class="btn btn-primary btn-lg">
+                        <i class="fa fa-user"></i> 设置用户ID
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3 style="color: #2c3e50;">系统特色</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); color: #1565c0; border: 1px solid #90caf9;">
+                        <i class="fa fa-magic text-primary"></i>
+                        基于用户的协同过滤推荐
+                    </li>
+                    <li class="list-group-item" style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); color: #2e7d32; border: 1px solid #a5d6a7;">
+                        <i class="fa fa-film text-success"></i>
+                        包含数千部电影数据
+                    </li>
+                    <li class="list-group-item" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); color: #ef6c00; border: 1px solid #ffb74d;">
+                        <i class="fa fa-star text-warning"></i>
+                        个性化评分系统
+                    </li>
+                    <li class="list-group-item" style="background: linear-gradient(135deg, #e3f2fd 0%, #b3e5fc 100%); color: #0277bd; border: 1px solid #4fc3f7;">
+                        <i class="fa fa-refresh text-info"></i>
+                        实时推荐更新
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); color: #2c3e50; border-radius: 15px; border: 1px solid #e9ecef;">
+            <div class="panel-heading" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0;">
+                <h3 class="panel-title"><i class="fa fa-search"></i> 探索电影</h3>
+            </div>
+            <div class="panel-body" style="color: #5a6c7d;">
+                <p>浏览我们的电影数据库，发现新电影。</p>
+                <a href="{% url 'movie_list' %}" class="btn btn-primary">浏览电影库</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); color: #2c3e50; border-radius: 15px; border: 1px solid #e9ecef;">
+            <div class="panel-heading" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 15px 15px 0 0;">
+                <h3 class="panel-title"><i class="fa fa-heart"></i> 获取推荐</h3>
+            </div>
+            <div class="panel-body" style="color: #5a6c7d;">
+                <p>基于您的评分历史，获取个性化电影推荐。</p>
+                <a href="{% url 'user_recommendations' %}" class="btn btn-success">查看推荐</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); color: #2c3e50; border-radius: 15px; border: 1px solid #e9ecef;">
+            <div class="panel-heading" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border-radius: 15px 15px 0 0;">
+                <h3 class="panel-title"><i class="fa fa-line-chart"></i> 智能算法</h3>
+            </div>
+            <div class="panel-body" style="color: #5a6c7d;">
+                <p>使用KNN协同过滤算法，精准预测您的喜好。</p>
+                <button class="btn btn-secondary" disabled>算法已启用</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#set-user-id').click(function() {
+        var userId = $('#user-id-input').val();
+        if (userId) {
+            localStorage.setItem('userId', userId);
+            alert('用户ID已设置为: ' + userId);
+            window.location.href = "{% url 'user_recommendations' %}";
+        } else {
+            alert('请输入有效的用户ID');
+        }
+    });
+    
+    // 从localStorage加载用户ID
+    var savedUserId = localStorage.getItem('userId');
+    if (savedUserId) {
+        $('#user-id-input').val(savedUserId);
+    }
+});
+</script>
+{% endblock %}
